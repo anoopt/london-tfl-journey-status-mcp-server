@@ -2,6 +2,7 @@
 
 import dotenv from "dotenv";
 import express from "express";
+import fs from "fs";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
@@ -220,16 +221,87 @@ async function setupStdio(tools) {
   await server.connect(transport);
 }
 
+function showHelp() {
+  console.log(`
+TfL (Transport for London) MCP Server
+=====================================
+
+A Model Context Protocol server providing real-time Transport for London data.
+
+USAGE:
+  london-transport-mcp [OPTIONS]
+
+OPTIONS:
+  --help              Show this help message
+  --version           Show version information
+  --streamable-http   Run as HTTP server with streamable transport
+  --sse              Run as Server-Sent Events server
+  (no flags)         Run in stdio mode (default for MCP)
+
+EXAMPLES:
+  london-transport-mcp                    # Run in stdio mode (MCP default)
+  london-transport-mcp --streamable-http  # Run as HTTP server
+  london-transport-mcp --sse              # Run as SSE server
+  london-transport-mcp --help             # Show this help
+
+ENVIRONMENT VARIABLES:
+  TFL_API_KEY        Your Transport for London API key (required)
+  PORT               Port for HTTP/SSE servers (default: 3001)
+
+TOOLS AVAILABLE:
+  - get_line_status: Get current status of TfL lines
+  - get_line_status_detail: Get detailed status with disruption info
+  - plan_journey: Plan journeys between London locations
+
+For more information, visit:
+https://github.com/anoopt/london-tfl-journey-status-mcp-server
+`);
+}
+
+function showVersion() {
+  // Read version from package.json if available
+  try {
+    const packageJson = JSON.parse(
+      fs.readFileSync(path.resolve(__dirname, 'package.json'), 'utf8')
+    );
+    console.log(`london-transport-mcp v${packageJson.version}`);
+  } catch (error) {
+    console.log('london-transport-mcp v1.0.0');
+  }
+}
+
 async function run() {
   const args = process.argv.slice(2);
+  
+  // Handle help and version flags first
+  if (args.includes("--help") || args.includes("-h")) {
+    showHelp();
+    process.exit(0);
+  }
+  
+  if (args.includes("--version") || args.includes("-v")) {
+    showVersion();
+    process.exit(0);
+  }
+
   const isStreamableHttp = args.includes("--streamable-http");
   const isSSE = args.includes("--sse");
-  const tools = await discoverTools();
+  
+  // Check for unknown flags
+  const knownFlags = ["--streamable-http", "--sse"];
+  const unknownFlags = args.filter(arg => arg.startsWith("--") && !knownFlags.includes(arg));
+  if (unknownFlags.length > 0) {
+    console.error(`Error: Unknown flag(s): ${unknownFlags.join(", ")}`);
+    console.error("Use --help to see available options");
+    process.exit(1);
+  }
 
   if (isStreamableHttp && isSSE) {
     console.error("Error: Cannot specify both --streamable-http and --sse");
     process.exit(1);
   }
+
+  const tools = await discoverTools();
 
   if (isStreamableHttp) {
     await setupStreamableHttp(tools);
