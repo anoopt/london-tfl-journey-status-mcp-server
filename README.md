@@ -31,6 +31,74 @@ Let's set things up!
 
 ## 🚦 Getting Started
 
+Choose your preferred installation method:
+
+## 📦 Option 1: Quick Install via npm (Recommended)
+
+The easiest way to use this MCP server is through npm:
+
+### Installation
+
+```sh
+npm install -g london-transport-mcp
+```
+
+### 🔐 Set up your TfL API key
+
+You can get a free API key from the [TfL API Portal](https://api.tfl.gov.uk/).
+
+**Method 1: Environment Variable (Recommended)**
+Set the environment variable in your system:
+
+```sh
+# Windows (PowerShell)
+$env:TFL_API_KEY="your_actual_tfl_api_key_here"
+
+# macOS/Linux
+export TFL_API_KEY="your_actual_tfl_api_key_here"
+```
+
+**Method 2: MCP Configuration**
+Include the API key directly in your MCP configuration (see examples below).
+
+### AI Assistant Configuration
+
+**For Claude Desktop** (Settings → Developers → Edit Config):
+```json
+{
+  "mcpServers": {
+    "london-transport": {
+      "command": "npx",
+      "args": ["london-transport-mcp"],
+      "env": {
+        "TFL_API_KEY": "your_actual_tfl_api_key_here"
+      }
+    }
+  }
+}
+```
+
+**For VS Code GitHub Copilot** (Settings → GitHub Copilot › MCP: Servers):
+```json
+{
+  "london-transport": {
+    "command": "npx",
+    "args": ["london-transport-mcp"],
+    "env": {
+      "TFL_API_KEY": "your_actual_tfl_api_key_here"
+    }
+  }
+}
+```
+
+That's it! No manual installation or path configuration required.
+
+---
+
+## 🛠️ Option 2: Local Development Setup
+
+For developers who want to modify the code or contribute:
+
 ### ⚙️ Prerequisites
 
 Before starting, please ensure you have:
@@ -42,9 +110,14 @@ Warning: if you run with a lower version of Node, `fetch` won't be present. Tool
 
 ### 📥 Installation & Setup
 
-**1. Install dependencies**
+**1. Clone the repository**
 
-Run from your project's root directory:
+```sh
+git clone https://github.com/anoopt/london-tfl-journey-status-mcp-server.git
+cd london-tfl-journey-status-mcp-server
+```
+
+**2. Install dependencies**
 
 ```sh
 npm install
@@ -52,9 +125,9 @@ npm install
 
 ### 🔐 Set up your TfL API key
 
-**2. Configure your TfL API key**
+**3. Configure your TfL API key**
 
-Update the `.env` file with your TfL API key:
+Create a `.env` file in the project root with your TfL API key:
 
 ```env
 TFL_API_KEY=your_actual_tfl_api_key_here
@@ -110,6 +183,10 @@ If all tools work correctly in Postman, you're ready to connect to an AI assista
 
 Once you've tested with Postman, you can connect your MCP server to AI assistants:
 
+### For Local Development Setup (Option 2)
+
+If you're using the local development setup, you'll need to specify full paths:
+
 ### Claude Desktop
 
 **Step 1**: Use the same node and mcpServer.js paths from the Postman testing step.
@@ -119,8 +196,8 @@ Once you've tested with Postman, you can connect your MCP server to AI assistant
 ```json
 {
   "mcpServers": {
-    "tfl-status": {
-      "command": "/full/path/to/node",
+    "london-transport": {
+      "command": "node",
       "args": ["/full/path/to/mcpServer.js"]
     }
   }
@@ -139,8 +216,8 @@ Once you've tested with Postman, you can connect your MCP server to AI assistant
 
 ```json
 {
-  "tfl-status": {
-    "command": "/full/path/to/node",
+  "london-transport": {
+    "command": "node",
     "args": ["/full/path/to/mcpServer.js"]
   }
 }

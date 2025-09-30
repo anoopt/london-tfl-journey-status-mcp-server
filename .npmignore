@@ -1,0 +1,26 @@
+# Environment files
+.env*
+
+# Git files
+.git/
+.gitignore
+
+# Development files
+Dockerfile
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Test files (if any)
+test/
+tests/
+*.test.js
+*.spec.js
