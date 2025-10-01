@@ -5,7 +5,7 @@ This [Model Context Protocol (MCP)](https://modelcontextprotocol.io/introduction
 > **⚠️ Important Disclaimer:** This is **not an official Transport for London (TfL) MCP server**. This is an independent project that uses the publicly available [TfL Unified API](https://api.tfl.gov.uk/) to provide transport data. It is not affiliated with, endorsed by, or officially supported by Transport for London.
 
 ## Demo Video
-[![TfL MCP Server Demo](./assets/demo.gif)
+![TfL MCP Server Demo](./assets/demo.gif)
 
 ## 🚇 What This MCP Server Does
 
