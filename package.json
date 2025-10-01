@@ -1,6 +1,6 @@
 {
   "name": "london-transport-mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Transport for London (TfL) MCP server providing real-time status and journey planning tools",
   "main": "mcpServer.js",
   "type": "module",
